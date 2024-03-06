@@ -1,73 +1,80 @@
 <template>
-  <nav class="bg-purple-600 text-white h-fit">
-    <div class="max-w-6xl mx-auto px-4">
+  <nav class="bg-custom-blue text-white h-screen w-[16%]">
+    <div class="max-w-6xl mx-auto">
       <div class="flex flex-col justify-between">
-        <div class="flex flex-col space-x-4">
-          <div class="flex items-center py-5 px-2">
-            <img
-              src="./icons/devzero_logo.png"
-              alt="Logo"
-              class="h-8 w-8 mr-2"
-            />
+        <div class="flex flex-col">
+          <div class="flex items-center justify-center gap-2 py-5 px-2">
+            <img src="./icons/devzero_logo.png" alt="Logo" class="w-12 -ml-2" />
             <h1 class="text-3xl font-bold font-sans">
-              Dev<span class="font-light">Zero</span>
+              Dev<span class="font-normal">Zero</span>
             </h1>
           </div>
-          <div class="hidden md:flex flex-col items-center space-x-1">
+          <div class="w-full border-y border-custom-text py-4 my-4">
             <RouterLink
+              active-class="link-active"
               to="/"
-              class="py-5 px-3 rounded hover:bg-purple-700 transition duration-300"
-              >Budget</RouterLink
+              class="flex items-center justify-center gap-4 py-2 px-3 w-full text-center hover:bg-purple-700 transition duration-300 font-bold"
             >
+              <img class="w-6 invert" src="./icons/wallet.png" alt="" />
+              <h1 class="text-lg">Budget</h1>
+            </RouterLink>
+          </div>
+          <RouterLink
+            active-class="link-active"
+            to="/all-accounts"
+            class="hover:bg-purple-700 transition duration-300 text-center py-2 px-3 flex items-center justify-between font-bold text-base"
+          >
+            <h1>All accounts</h1>
+            <p>{{ totalBalance }}</p>
+          </RouterLink>
+          <div class="hidden w-full md:flex flex-col items-center mt-6">
             <RouterLink
-              to="/all-accounts"
-              class="py-5 px-3 rounded hover:bg-purple-700 transition duration-300"
-              >All Accounts</RouterLink
-            >
-            <RouterLink
+              active-class="link-active"
               to="/budgeted-accounts"
-              class="py-5 px-3 rounded hover:bg-purple-700 transition duration-300"
-              >Budgeted Accounts</RouterLink
+              class="py-2 px-3 hover:bg-purple-700 transition duration-300 w-full font-semibold"
             >
-          </div>
-        </div>
-        <div class="hidden md:flex flex-col items-center space-x-1">
-          <div
-            v-for="bank in banks"
-            :key="bank.bank_name"
-            class="text-sm font-semibold py-5 px-3"
-          >
-            <RouterLink
-              :to="`/account/${bank.bank_name}`"
-              class="py-5 px-3 rounded hover:bg-purple-700 transition duration-300"
-            >
-              <span>{{ bank.bank_name }}: </span
-              ><span class="text-green-300">{{
-                bank.balance.toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                })
-              }}</span>
+              Budgeted
             </RouterLink>
-          </div>
-        </div>
-        <RouterLink
-          to="/off-budget-accounts"
-          class="py-5 px-3 rounded hover:bg-purple-700 transition text-center duration-300"
-          >Off-Budget Accounts
-        </RouterLink>
-        <div class="hidden md:flex flex-col items-center space-x-1 mt-4">
-          <div
-            v-for="asset in offBudget"
-            :key="asset"
-            class="text-sm font-semibold py-5 px-3"
-          >
-            <RouterLink
-              :to="`/asset/${asset}`"
-              class="py-5 px-3 rounded hover:bg-purple-700 transition duration-300"
+            <div
+              v-for="bank in banks"
+              :key="bank.bank_name"
+              class="text-sm flex flex-col w-full italic"
             >
-              {{ asset }}
+              <RouterLink
+                active-class="link-active"
+                :to="`/account/${bank.bank_name}`"
+                class="py-2 px-3 hover:bg-purple-700 transition duration-300 w-full flex items-center justify-between"
+              >
+                <span>{{ bank.bank_name }}: </span
+                ><span class="">{{
+                  bank.balance.toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  })
+                }}</span>
+              </RouterLink>
+            </div>
+          </div>
+          <div class="hidden w-full md:flex flex-col items-center mt-6">
+            <RouterLink
+              active-class="link-active"
+              to="/off-budget-accounts"
+              class="py-2 px-3 hover:bg-purple-700 transition duration-300 font-semibold w-full"
+              >Off-Budget
             </RouterLink>
+            <div
+              v-for="asset in offBudget"
+              :key="asset"
+              class="text-sm flex flex-col w-full italic"
+            >
+              <RouterLink
+                active-class="link-active"
+                :to="`/asset/${asset}`"
+                class="py-2 px-3 hover:bg-purple-700 transition duration-300 w-full flex items-center justify-between"
+              >
+                {{ asset }}
+              </RouterLink>
+            </div>
           </div>
         </div>
       </div>
@@ -76,13 +83,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref } from "vue";
+import { defineComponent, inject, computed, ref } from "vue";
+import type { Ref } from "vue";
 import { RouterLink } from "vue-router";
 import type { Account } from "../domain/account";
 
 export default defineComponent({
   setup() {
-    const banks: Account[] = inject("banks") ?? [];
+    const banks = inject<Ref<Account[]>>("banks");
+
+    const totalBalance = computed(() => {
+      if (banks && banks.value) {
+        return banks.value.reduce(
+          (acc, bank) => acc + parseFloat(String(bank.balance)),
+          0
+        );
+      }
+      return 0;
+    });
+
     const offBudget = ref([
       "Mortgage",
       "Investment Return",
@@ -90,7 +109,14 @@ export default defineComponent({
       "House Asset",
     ]);
 
-    return { banks, offBudget };
+    return { banks: banks?.value, offBudget, totalBalance };
   },
 });
 </script>
+
+<style>
+.link-active {
+  border-left: 5px solid white;
+  font-weight: bold;
+}
+</style>

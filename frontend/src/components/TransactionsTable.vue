@@ -65,43 +65,43 @@ export default defineComponent({
 
 <template>
   <div class="overflow-x-auto relative shadow-md sm:rounded-lg flex-1">
-    <table class="w-full text-sm text-left text-gray-500">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+    <table class="w-full text-sm text-left text-black">
+      <thead class="text-xs text-white uppercase bg-custom-blue">
         <tr>
-          <th scope="col" class="py-3 px-6">Date</th>
-          <th scope="col" class="py-3 px-6">Account Name</th>
-          <th scope="col" class="py-3 px-6">Payee</th>
-          <th scope="col" class="py-3 px-6">Category</th>
-          <th scope="col" class="py-3 px-6">Payments</th>
-          <th scope="col" class="py-3 px-6">Deposits</th>
+          <th scope="col" class="py-2 px-6">Date</th>
+          <th scope="col" class="py-2 px-6">Account Name</th>
+          <th scope="col" class="py-2 px-6">Payee</th>
+          <th scope="col" class="py-2 px-6">Category</th>
+          <th scope="col" class="py-2 px-6 text-center">Payments</th>
+          <th scope="col" class="py-2 px-6 text-center">Deposits</th>
         </tr>
       </thead>
       <tbody>
         <tr
           v-for="transaction in filteredTransactions"
           :key="transaction.id"
-          class="bg-white border-b hover:bg-gray-50"
+          class="bg-custom-text border-b hover:bg-gray-50"
         >
-          <td class="py-4 px-6">{{ formatDate(transaction.date) }}</td>
-          <td class="py-4 px-6">{{ transaction.bank_name }}</td>
-          <td class="py-4 px-6">{{ transaction.payee }}</td>
-          <td class="py-4 px-6">{{ transaction.category }}</td>
+          <td class="py-2 px-6">{{ formatDate(transaction.date) }}</td>
+          <td class="py-2 px-6">{{ transaction.bank_name }}</td>
+          <td class="py-2 px-6">{{ transaction.payee }}</td>
+          <td class="py-2 px-6">{{ transaction.category }}</td>
           <td
-            class="py-4 px-6"
+            class="py-2 px-6 text-center"
             v-if="transaction.amount < 0"
-            :class="{ 'text-red-500': true }"
+            
           >
             {{ Math.abs(transaction.amount) }}
           </td>
-          <td class="py-4 px-6" v-else></td>
+          <td class="py-2 px-6" v-else></td>
           <td
-            class="py-4 px-6"
+            class="py-2 px-6 text-center"
             v-if="transaction.amount >= 0"
-            :class="{ 'text-green-500': true }"
+            
           >
             {{ transaction.amount }}
           </td>
-          <td class="py-4 px-6" v-else></td>
+          <td class="py-2 px-6" v-else></td>
         </tr>
       </tbody>
     </table>

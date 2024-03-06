@@ -26,13 +26,14 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class=" flex flex-col flex-1 p-4">
-    <h2 class="text-xl font-bold mb-4">{{ assetName }}</h2>
+  <div class=" flex flex-col flex-1 gap-4 p-4 h-screen overflow-auto">
+    <h2 class="text-3xl font-bold">{{ assetName }}</h2>
     <button
-      class="mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      class="w-fit flex items-center justify-center gap-2 bg-custom-blue text-white px-4 py-2 rounded-lg hover:bg-custom-text"
       @click="showModal = true"
     >
-      Add New Transaction
+      <span class=" text-2xl -mt-1">&#43; </span>
+      <span>Add New Transaction</span>
     </button>
     <AddTransaction
       v-model:showModal="showModal"

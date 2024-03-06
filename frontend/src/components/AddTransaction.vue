@@ -1,6 +1,9 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, inject, ref, watch } from 'vue';
+import type { Ref } from "vue";
 import type { Transaction } from '../domain/transaction';
+import type { Account } from '../domain/account';
+import { addTransaction } from '@/http/api';
 
 export default defineComponent({
   props: {
@@ -8,23 +11,38 @@ export default defineComponent({
   },
   emits: ['update:showModal', 'add-transaction'],
   setup(props, { emit }) {
+    const banks = inject<Ref<Account[]>>('banks');
+
     const newTransaction = ref<Transaction>({
       id: '',
+      account_id: '',
       date: new Date(),
-      accountname: '',
+      bank_name: '',
       payee: '',
       category: '',
-      payment: 0,
+      amount: 0,
+      type: '',
     });
 
-    const paymentType = ref('');
-
-    const submitForm = () => {
-      if (paymentType.value === 'deposit') {
-        newTransaction.value.payment = Math.abs(newTransaction.value.payment);
-      } else {
-        newTransaction.value.payment = -Math.abs(newTransaction.value.payment);
+    watch(() => newTransaction.value.bank_name, (newBankName) => {
+      const selectedBank = banks?.value?.find(bank => bank.bank_name === newBankName);
+      if (selectedBank) {
+        newTransaction.value.account_id = selectedBank.id;
       }
+    });
+
+    const submitForm = async () => {
+      if (newTransaction.value.type === 'credit') {
+        newTransaction.value.amount = Math.abs(newTransaction.value.amount);
+      } else {
+        newTransaction.value.amount = -Math.abs(newTransaction.value.amount);
+      }
+
+      console.log(newTransaction.value);
+
+      const res = await addTransaction(newTransaction.value);
+
+      console.log(res);
 
       emit('add-transaction', newTransaction.value);
       closeModal();
@@ -32,10 +50,11 @@ export default defineComponent({
 
     const closeModal = () => emit('update:showModal', false);
 
-    return { newTransaction, submitForm, closeModal, paymentType };
+    return { newTransaction, submitForm, closeModal };
   },
 });
 </script>
+
 
 <template>
   <div v-if="showModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-10" @click.self="closeModal">
@@ -77,15 +96,15 @@ export default defineComponent({
         </div>
         <!-- Type (Payment/Deposit) Dropdown -->
         <div class="mt-2">
-          <select v-model="paymentType" class="mt-1 block w-full" required>
+          <select v-model="newTransaction.type" class="mt-1 block w-full" required>
             <option disabled value="">Select Type</option>
-            <option value="payment">Payment</option>
-            <option value="deposit">Deposit</option>
+            <option value="debit">Debit</option>
+            <option value="Credit">Credit</option>
           </select>
         </div>
         <!-- Amount Input -->
         <div class="mt-2">
-          <input v-model.number="newTransaction.payment" type="number" placeholder="Amount" class="mt-1 block w-full" required>
+          <input v-model.number="newTransaction.amount" type="number" placeholder="Amount" class="mt-1 block w-full" required>
         </div>
         <!-- Date Input -->
         <div class="mt-2">
@@ -93,7 +112,7 @@ export default defineComponent({
         </div>
         <!-- Bank Dropdown -->
         <div class="mt-2">
-          <select v-model="newTransaction.accountname" class="mt-1 block w-full" required>
+          <select v-model="newTransaction.bank_name" class="mt-1 block w-full" required>
             <option disabled value="">Select Bank</option>
             <option>HSBC Bank</option>
             <option>Chase Bank</option>
