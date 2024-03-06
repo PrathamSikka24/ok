@@ -8,8 +8,12 @@ export default {
     extend: {
       colors:{
         "custom-blue": "#503185",
+        "custom-dark-blue": "#362259",
         "custom-text": "#dcd0f5",
-      }
+      },
+      fontFamily: {
+        sans: ['Roboto', 'sans-serif'],
+      },
     },
   },
   plugins: [],

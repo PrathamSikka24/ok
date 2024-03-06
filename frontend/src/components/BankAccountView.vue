@@ -26,7 +26,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="flex flex-col flex-1 gap-4 p-4 h-screen overflow-auto">
+  <div class="flex flex-col flex-1 gap-4 p-4 h-full overflow-auto">
     <h2 class="text-3xl font-bold">{{ bankName }}</h2>
     <button
       class="w-fit flex items-center justify-center gap-2 bg-custom-blue text-white px-4 py-2 rounded-lg hover:bg-custom-text"

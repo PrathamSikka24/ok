@@ -72,8 +72,8 @@ export default defineComponent({
           <th scope="col" class="py-2 px-6">Account Name</th>
           <th scope="col" class="py-2 px-6">Payee</th>
           <th scope="col" class="py-2 px-6">Category</th>
-          <th scope="col" class="py-2 px-6 text-center">Payments</th>
-          <th scope="col" class="py-2 px-6 text-center">Deposits</th>
+          <th scope="col" class="py-2 px-6 text-center">Payments ($)</th>
+          <th scope="col" class="py-2 px-6 text-center">Deposits ($)</th>
         </tr>
       </thead>
       <tbody>

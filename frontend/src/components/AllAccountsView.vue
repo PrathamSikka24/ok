@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, inject, ref } from "vue";
+import { defineComponent, inject, ref, computed } from "vue";
 import type { Ref } from "vue";
 import type { Transaction } from "../domain/transaction";
 import TransactionsTable from "../components/TransactionsTable.vue";
@@ -16,32 +16,55 @@ export default defineComponent({
 
     const handleAddTransaction = (newTransaction: Transaction) => {
       console.log(newTransaction);
+      // Here you would typically add the new transaction to your transactions array
     };
 
-    return { transactions, showModal, handleAddTransaction };
+    // Computed property to calculate total payments and deposits
+    const totalPayments = computed(() => {
+      return transactions?.value?.filter(t => parseFloat(t.amount) < 0).reduce((acc, curr) => acc + parseFloat(curr.amount.toString()), 0) ?? 0;
+    });
+
+    const totalDeposits = computed(() => {
+      return transactions?.value?.filter(t => parseFloat(t.amount) > 0).reduce((acc, curr) => acc + parseFloat(curr.amount), 0) ?? 0;
+    });
+
+    return { transactions, showModal, handleAddTransaction, totalPayments, totalDeposits };
   },
 });
 </script>
 
 <template>
-  <div class="flex flex-col flex-1 gap-4 p-4 h-screen overflow-auto">
+  <div class="flex flex-col flex-1 gap-4 p-4 h-full overflow-auto">
     <h2 class="text-3xl font-bold">All Accounts</h2>
 
-    <button
-      class="w-fit flex items-center justify-center gap-2 bg-custom-blue text-white px-4 py-2 rounded-lg hover:bg-custom-text"
-      @click="showModal = true"
-    >
-      <span class=" text-2xl -mt-1">&#43; </span>
-      <span>Add New Transaction</span>
-    </button>
+    <div class="flex items-end justify-between">
 
+      <div class="mt-4">
+        <h3 class="text-xl font-semibold">Totals:</h3>
+        <p>Total Payments: <span class="text-red-500">{{ totalPayments.toFixed(2) }}</span></p>
+        <p>Total Deposits: <span class="text-green-500">{{ totalDeposits.toFixed(2) }}</span></p>
+      </div>
+      <!-- Add New Transaction Button -->
+      <button
+        class="w-fit h-fit flex items-center justify-center gap-2 bg-custom-blue text-white px-4 py-2 rounded-lg hover:bg-custom-text"
+        @click="showModal = true"
+      >
+        <span class=" text-2xl -mt-1">&#43; </span>
+        <span>Add New Transaction</span>
+      </button>
+    </div>
+
+    <!-- Add Transaction Modal -->
     <AddTransaction
       v-model:showModal="showModal"
       @add-transaction="handleAddTransaction"
     />
 
+    <!-- Transactions Table -->
     <div v-if="transactions">
       <TransactionsTable :transactions="transactions ?? []" />
     </div>
+
+    <!-- Totals Display -->
   </div>
 </template>

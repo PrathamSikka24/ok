@@ -3,6 +3,7 @@ import { onMounted, provide, ref } from "vue";
 import type { Ref } from "vue";
 import { RouterView } from "vue-router";
 import Navbar from "./components/Navbar.vue";
+import Topbar from "./components/Topbar.vue";
 import { getAllAccounts, getAllTransactions } from './http/api';
 import type { Transaction } from './domain/transaction';
 import type { Account } from './domain/account';
@@ -23,8 +24,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="transactions.length != 0 && banks.length != 0" class="flex h-screen">
-    <Navbar /> 
-    <RouterView />
+  <div class="flex flex-col h-screen">
+    <div class="w-full">
+      <Topbar />
+    </div>
+    <div v-if="transactions.length != 0 && banks.length != 0" class="flex flex-1 overflow-auto">
+      <Navbar /> 
+      <RouterView />
+    </div>
   </div>
 </template>

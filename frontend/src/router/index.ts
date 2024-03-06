@@ -37,6 +37,11 @@ const router = createRouter({
       name: 'asset-name',
       component: AssetView,
       props: true
+    },
+    {
+      path: '/contact',
+      name: 'contact',
+      component: () => import('../components/ContactView.vue')
     }
   ]
 });
