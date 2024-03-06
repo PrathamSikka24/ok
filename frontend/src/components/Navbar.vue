@@ -34,14 +34,14 @@
         <div class="hidden md:flex flex-col items-center space-x-1">
           <div
             v-for="bank in banks"
-            :key="bank.name"
+            :key="bank.bank_name"
             class="text-sm font-semibold py-5 px-3"
           >
             <RouterLink
-              :to="`/account/${bank.name}`"
+              :to="`/account/${bank.bank_name}`"
               class="py-5 px-3 rounded hover:bg-purple-700 transition duration-300"
             >
-              <span>{{ bank.name }}: </span
+              <span>{{ bank.bank_name }}: </span
               ><span class="text-green-300">{{
                 bank.balance.toLocaleString("en-US", {
                   style: "currency",
@@ -78,15 +78,11 @@
 <script lang="ts">
 import { defineComponent, inject, ref } from "vue";
 import { RouterLink } from "vue-router";
-
-interface Bank {
-  name: string;
-  balance: number;
-}
+import type { Account } from "../domain/account";
 
 export default defineComponent({
   setup() {
-    const banks: Bank[] = inject("banks") ?? [];
+    const banks: Account[] = inject("banks") ?? [];
     const offBudget = ref([
       "Mortgage",
       "Investment Return",

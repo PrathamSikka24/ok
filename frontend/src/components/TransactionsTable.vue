@@ -28,15 +28,15 @@ export default defineComponent({
       }
       if (props.budget === 'budgeted') {
         return props.transactions.filter(
-          (transaction) => transaction.payment < 0
+          (transaction) => transaction.amount < 0
         );
       } else if (props.budget === 'off-budgeted') {
         return props.transactions.filter(
-          (transaction) => transaction.payment >= 0
+          (transaction) => transaction.amount >= 0
         ); 
       } else if (props.bankName) {
         return props.transactions.filter(
-          (transaction) => transaction.accountname === props.bankName
+          (transaction) => transaction.bank_name === props.bankName
         );
       } else {
         return props.transactions;
@@ -83,23 +83,23 @@ export default defineComponent({
           class="bg-white border-b hover:bg-gray-50"
         >
           <td class="py-4 px-6">{{ formatDate(transaction.date) }}</td>
-          <td class="py-4 px-6">{{ transaction.accountname }}</td>
+          <td class="py-4 px-6">{{ transaction.bank_name }}</td>
           <td class="py-4 px-6">{{ transaction.payee }}</td>
           <td class="py-4 px-6">{{ transaction.category }}</td>
           <td
             class="py-4 px-6"
-            v-if="transaction.payment < 0"
+            v-if="transaction.amount < 0"
             :class="{ 'text-red-500': true }"
           >
-            {{ Math.abs(transaction.payment) }}
+            {{ Math.abs(transaction.amount) }}
           </td>
           <td class="py-4 px-6" v-else></td>
           <td
             class="py-4 px-6"
-            v-if="transaction.payment >= 0"
+            v-if="transaction.amount >= 0"
             :class="{ 'text-green-500': true }"
           >
-            {{ transaction.payment }}
+            {{ transaction.amount }}
           </td>
           <td class="py-4 px-6" v-else></td>
         </tr>

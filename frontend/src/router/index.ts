@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import BankAccountView from '../views/BankAccountView.vue';
-import AssetView from '../views/AssetView.vue'; 
+import HomeView from '../components/HomeView.vue';
+import BankAccountView from '../components/BankAccountView.vue';
+import AssetView from '../components/AssetView.vue'; 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,17 +14,17 @@ const router = createRouter({
     {
       path: '/all-accounts',
       name: 'all-accounts',
-      component: () => import('../views/AllAccountsView.vue')
+      component: () => import('../components/AllAccountsView.vue')
     },
     {
       path: '/budgeted-accounts',
       name: 'budgeted-accounts',
-      component: () => import('../views/BudgetedView.vue')
+      component: () => import('../components/BudgetedView.vue')
     },
     {
       path: '/off-budget-accounts',
       name: 'off-budget-accounts',
-      component: () => import('../views/OffBudgetView.vue')
+      component: () => import('../components/OffBudgetView.vue')
     },
     {
       path: '/account/:bankName',
