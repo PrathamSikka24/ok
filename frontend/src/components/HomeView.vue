@@ -1,7 +1,7 @@
 <template>
-  <div class="flex justify-center flex-1 h-full overflow-auto">
+  <div class="flex justify-center flex-1 h-screen overflow-auto">
     <div class="w-full h-full flex items-center justify-center">
-      <table class="w-[60%] h-[50%] text-left bg-custom-text shadow-2xl rounded-lg overflow-hidden">
+      <table class="w-[60%] text-left bg-custom-text shadow-2xl rounded-lg overflow-hidden">
         <thead class="bg-custom-blue text-white">
           <tr>
             <th class="px-6 py-2 font-bold uppercase tracking-wider">Category</th>
@@ -40,39 +40,43 @@
   </div>
 </template>
 
-<script>
-import { inject, ref, computed } from 'vue';
+<script lang="ts">
+import { defineComponent, inject, ref, computed } from 'vue';
+import type { Ref } from "vue";
+import type { Transaction } from '../domain/transaction';
 
-export default {
+interface BudgetedAmounts {
+  [category: string]: number;
+}
+
+export default defineComponent({
   setup() {
-    const injectedTransactions = inject('transactions');
-    const transactions = injectedTransactions.value;
-    const budgetedAmounts = ref({});
+    const injectedTransactions = inject<Ref<Transaction[]>>("transactions");
+    const budgetedAmounts = ref<BudgetedAmounts>({});
 
-    const getRandomBudgetedAmount = () => {
+    const getRandomBudgetedAmount = (): number => {
       return Math.floor(Math.random() * (1000 - 100 + 1)) + 100;
     };
 
     const initBudgetedAmounts = () => {
-      transactions.forEach((transaction) => {
-        const category = transaction.category;
-        if (!(category in budgetedAmounts.value)) {
-          budgetedAmounts.value[category] = getRandomBudgetedAmount();
+      injectedTransactions?.value?.forEach((transaction) => {
+        if (!budgetedAmounts.value[transaction.category]) {
+          budgetedAmounts.value[transaction.category] = getRandomBudgetedAmount();
         }
       });
     };
 
-    initBudgetedAmounts();
+    if (injectedTransactions?.value) {
+      initBudgetedAmounts();
+    }
 
     const totalsByCategory = computed(() => {
-      const totals = {};
-      transactions.forEach((transaction) => {
-        const amount = parseFloat(transaction.amount);
-        const category = transaction.category;
-        if (!totals[category]) {
-          totals[category] = { spent: 0 };
+      const totals: { [category: string]: { spent: number } } = {};
+      injectedTransactions?.value?.forEach((transaction) => {
+        if (!totals[transaction.category]) {
+          totals[transaction.category] = { spent: 0 };
         }
-        totals[category].spent += amount;
+        totals[transaction.category].spent += parseFloat(transaction.amount.toString());
       });
       return totals;
     });
@@ -82,7 +86,7 @@ export default {
     });
 
     const totalSpent = computed(() => {
-      return Object.values(totalsByCategory.value).reduce((acc, total) => acc + total.spent, 0);
+      return Object.values(totalsByCategory.value).reduce((acc, { spent }) => acc + spent, 0);
     });
 
     const totalBalance = computed(() => {
@@ -90,7 +94,6 @@ export default {
     });
 
     return {
-      transactions,
       budgetedAmounts,
       totalsByCategory,
       totalBudgeted,
@@ -98,5 +101,5 @@ export default {
       totalBalance
     };
   }
-};
+});
 </script>

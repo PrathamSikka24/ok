@@ -16,16 +16,14 @@ export default defineComponent({
 
     const handleAddTransaction = (newTransaction: Transaction) => {
       console.log(newTransaction);
-      // Here you would typically add the new transaction to your transactions array
     };
 
-    // Computed property to calculate total payments and deposits
     const totalPayments = computed(() => {
-      return transactions?.value?.filter(t => parseFloat(t.amount) < 0).reduce((acc, curr) => acc + parseFloat(curr.amount.toString()), 0) ?? 0;
+      return transactions?.value?.filter(t => parseFloat(t.amount.toString()) < 0).reduce((acc, curr) => acc + parseFloat(curr.amount.toString()), 0) ?? 0;
     });
 
     const totalDeposits = computed(() => {
-      return transactions?.value?.filter(t => parseFloat(t.amount) > 0).reduce((acc, curr) => acc + parseFloat(curr.amount), 0) ?? 0;
+      return transactions?.value?.filter(t => parseFloat(t.amount.toString()) > 0).reduce((acc, curr) => acc + parseFloat(curr.amount.toString()), 0) ?? 0;
     });
 
     return { transactions, showModal, handleAddTransaction, totalPayments, totalDeposits };
@@ -35,7 +33,7 @@ export default defineComponent({
 
 <template>
   <div class="flex flex-col flex-1 gap-4 p-4 h-full overflow-auto">
-    <h2 class="text-3xl font-bold">All Accounts</h2>
+    <h2 class="text-3xl font-bold text-custom-blue">All Accounts</h2>
 
     <div class="flex items-end justify-between">
 
@@ -46,7 +44,7 @@ export default defineComponent({
       </div>
       <!-- Add New Transaction Button -->
       <button
-        class="w-fit h-fit flex items-center justify-center gap-2 bg-custom-blue text-white px-4 py-2 rounded-lg hover:bg-custom-text"
+        class="w-fit h-fit flex items-center justify-center gap-2 bg-custom-blue text-white px-4 py-2 rounded-lg hover:bg-purple-700"
         @click="showModal = true"
       >
         <span class=" text-2xl -mt-1">&#43; </span>

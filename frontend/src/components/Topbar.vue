@@ -1,3 +1,18 @@
+<script lang="ts">
+import { defineComponent } from "vue";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { RouterLink } from "vue-router";
+
+export default defineComponent({});
+</script>
+
+<style>
+.link-active2 {
+  border-bottom: 5px solid white;
+  font-weight: bold;
+}
+</style>
+
 <template>
   <nav
     class="bg-custom-dark-blue text-white w-full h-full flex items-center justify-between shadow-lg -b border-custom-text px-8"
@@ -38,17 +53,3 @@
     </div>
   </nav>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-import { RouterLink } from "vue-router";
-
-export default defineComponent({});
-</script>
-
-<style>
-.link-active2 {
-  border-bottom: 5px solid white;
-  font-weight: bold;
-}
-</style>

@@ -26,6 +26,10 @@ def get_db_connection():
         print(f"Error connecting to MySQL Database: {e}")
         return None
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({"message": "Server is running"})
+
 @app.route('/accounts', methods=['GET'])
 def get_accounts():
     conn = get_db_connection()
