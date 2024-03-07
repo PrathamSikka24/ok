@@ -42,9 +42,8 @@ jobs:
           flake8 .
         working-directory: ./backend
       - run: |
-          # Add commands to run your tests, e.g., pytest
-          pytest
-        working-directory: ./backend
+          python -m unittest discover -s ./backend -p '*_test.py'
+        working-directory: ./
 
   database-migrations:
     runs-on: ubuntu-latest
