@@ -69,8 +69,10 @@ def add_transaction():
         cursor = conn.cursor()
         cursor.execute(
             'INSERT INTO transactions (account_id, bank_name, date, type, payee, amount, category) VALUES (%s, %s, %s, %s, %s, %s, %s)',
-            (transaction_data['account_id'], transaction_data['bank_name'], transaction_data['date'],
-             transaction_data['type'], transaction_data['payee'], transaction_data['amount'], transaction_data['category']))
+            (transaction_data['account_id'], transaction_data['bank_name'],
+             transaction_data['date'], transaction_data['type'],
+             transaction_data['payee'], transaction_data['amount'],
+             transaction_data['category']))
         conn.commit()
         cursor.close()
         conn.close()
