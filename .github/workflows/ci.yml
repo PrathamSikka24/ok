@@ -23,7 +23,7 @@ jobs:
 
       - name: Change working directory and install frontend dependencies
         run: |
-          cd self-budget-test/frontend
+          cd frontend
           npm install
 
       - name: Run frontend tests
