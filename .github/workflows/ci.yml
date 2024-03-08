@@ -28,5 +28,5 @@ jobs:
 
       - name: Run frontend tests
         run: |
-          cd self-budget-test/frontend
+          cd frontend
           npm test
