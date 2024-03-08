@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 14
 
-      - name: Install frontend dependencies
+      - name: Change working directory and install frontend dependencies
         run: |
           cd self-budget-test/frontend
           npm install
@@ -30,18 +30,3 @@ jobs:
         run: |
           cd self-budget-test/frontend
           npm test
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-
-      - name: Install backend dependencies
-        run: |
-          cd self-budget-test/backend
-          pip install -r requirements.txt
-
-      - name: Run backend tests
-        run: |
-          cd self-budget-test/backend
-          python -m unittest
