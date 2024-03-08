@@ -9,7 +9,30 @@ on:
       - main
 
 jobs:
-  build:
+  setup-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+
+      - name: Run backend tests
+        run: |
+          cd backend
+          python -m unittest
+
+  setup-frontend:
+    needs: setup-backend
     runs-on: ubuntu-latest
 
     steps:
@@ -21,7 +44,7 @@ jobs:
         with:
           node-version: 14
 
-      - name: Change working directory and install frontend dependencies
+      - name: Install frontend dependencies
         run: |
           cd frontend
           npm install
